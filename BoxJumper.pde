@@ -3,13 +3,16 @@ int maxDistance = 600;
 int jumpVelocity = 40;
 double gravity = 2.5;
 
-String deathNote = "!!!";
-
+String[] deathNotes = { "You were killed by that spike!!!", "A spike went up your bum!!!", "You were brutally dissected!!!", "Next time bring a jetpack!!!" };
+String deathNote = null;
+String finalScore = "Score: ";
 int size=100;
 
 boolean active = true;
 
 boolean killed = false;
+
+boolean messagePlayed = false;
 
 double friction = .0;
 int scroll = 0;
@@ -41,10 +44,11 @@ void draw() {
   if (!killed) {
     if (processTriangles()) {
       background(255, 0, 0);
+      deathNote = deathNotes[ (int) random(0, deathNotes.length)]; 
       return;
     }
   }
-
+  
   if (killed) {
     background(255, 0, 0);
     fill(255, 255, 255, deathOpacity);
@@ -56,13 +60,22 @@ void draw() {
     ellipse(width/2+50, height/2-50, 50, 50); // Right eye
     strokeWeight(5);
     bezier(width/2-50, height/2, width/2-50, height/2+50, width/2+50, height/2+50, width/2+50, height/2);
-    
-    
+
+    String temp = finalScore+score;
+    float scoreWidth = textWidth(temp)/2;
+    text(finalScore+score, width/2-scoreWidth, height/2+200);
     
     
     if(deathOpacity<255) deathOpacity+=5;
-    
-    
+    else {
+      if(!messagePlayed) {
+        try { 
+          Runtime.getRuntime().exec("say -v zarvox '"+deathNote+"'");
+        } catch(java.io.IOException e) {
+        }
+        messagePlayed = true;
+      }
+    }
     
   }
 }
@@ -84,6 +97,8 @@ void reset() {
     killed = false;
     deathOpacity=0;
   score=0;
+  messagePlayed = false;
+  deathNote = null;
 }
 
 void resetTriangles() {
