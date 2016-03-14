@@ -25,7 +25,7 @@ void setup() {
   size(displayWidth, displayHeight, P2D);
   player = new Box(100, height-size, size, size, 0, 0);
   smooth();
-  triangle = new DeathTriangle[10];
+  triangle = new DeathTriangle[1];
   int lastX = width;
   for (int i=0; i<triangle.length; i++) {
     int xpos = lastX+(int) random(minDistance, maxDistance);
@@ -40,7 +40,7 @@ void draw() {
   fill(255);
   textSize(60);
   text(score, 60, 60);
-  if (active) scroll+=10;
+  if (active) scroll+=map(score, 0, 10, 10, 15);
   if (!killed) {
     if (processTriangles()) {
       background(255, 0, 0);
@@ -56,8 +56,8 @@ void draw() {
     float twidth = textWidth(deathNote)/2;
     text(deathNote, width/2-twidth, height/4);
     noStroke();
-    ellipse(width/2-50, height/2-50, 50, 50); // Left eye
-    ellipse(width/2+50, height/2-50, 50, 50); // Right eye
+    ellipse(width/2-50, height/2-50, 50, 50); 
+    ellipse(width/2+50, height/2-50, 50, 50); 
     strokeWeight(5);
     bezier(width/2-50, height/2, width/2-50, height/2+50, width/2+50, height/2+50, width/2+50, height/2);
 
@@ -103,7 +103,7 @@ void reset() {
 
 void resetTriangles() {
     scroll = 0;
-  triangle = new DeathTriangle[5];
+  triangle = new DeathTriangle[score];
   int lastX = width;
   for (int i=0; i<triangle.length; i++) {
     int xpos = lastX+(int) random(minDistance, maxDistance);
@@ -122,6 +122,8 @@ boolean processTriangles() {
       killed = true;
       return true;
     }
+    println( (player.x+player.wid)+ ">=" + ((triangle[i].x-scroll)-500) + " && " + player.yvol + "==0 && " + player.x + "<=" + ((triangle[i].x-scroll)+triangle[i].size));
+    if(player.x+player.wid >= (triangle[i].x-scroll)-50 && player.distance() == 0 && player.x <= (triangle[i].x-scroll)+triangle[i].size) player.yvol-=jumpVelocity;
     triangle[i].draw();
   }
   if (!onScreen) resetTriangles();
