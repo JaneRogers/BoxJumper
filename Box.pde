@@ -27,7 +27,7 @@ class Box {
     if(jumping) {
       jumpPos+=1;
      
-      ty = (height-this.heig)-((int) map(pow((jumpPos*0.3), 2), 25, 0, 0, jumpHeight));
+      ty = (height-this.heig)-((int) map(pow((jumpPos*0.4), 2), 25, 0, 0, jumpHeight));
       if(jumpPos == 10) jumping=false;
     }
       
