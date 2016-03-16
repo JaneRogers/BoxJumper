@@ -9,7 +9,9 @@ class Box {
   int wid=30;
   int heig=30;
   int rotation = 0;
-  int jumpHeight = 304;
+  int jumpHeight=340;
+  boolean jumping=false;
+  float jumpPos=-10;
   Box(int _x, int _y, int _wid, int _heig, int _xvol, int _yvol) { // Constructor
     this.x = _x;
     this.y = _y;
@@ -20,48 +22,36 @@ class Box {
   randomColor();
   }
 
-  void draw() {
-
-
-    
-    if (x+wid+xvol >= width) {
-      xvol*=-1;
+  void draw() {    
+    int ty=this.y;
+    if(jumping) {
+      jumpPos+=1;
+     
+      ty = (height-this.heig)-((int) map(pow((jumpPos*0.3), 2), 25, 0, 0, jumpHeight));
+      if(jumpPos == 10) jumping=false;
+    }
       
-    }
-    if (x+xvol <= 0) {
-      xvol*=-1;
-      
-    }
-
-    if (y+heig+yvol >= height) {
-      yvol*=-1;
-      yvol*=friction;
-      y = height-heig;
-    if(abs(yvol)<gravity) yvol=0;
-    }
-    if (y+yvol <= 0){
-      yvol*=-1;
-      
-    }
-    if(y+heig+yvol < height-1) yvol+=gravity;
     
     pushMatrix();
-    translate(x+(wid/2), y+(heig/2));
-    if(yvol > 0) rotate(radians(-map(this.distance(), 0, this.jumpHeight, 0, 180)));
-    if(yvol < 0) rotate(radians(-map(this.distance(), 0, this.jumpHeight, 180, 0)));
+    translate(x+(wid/2), ty+(heig/2));
+    //if(yvol > 0) rotate(radians(-map(this.distance(), 0, this.jumpHeight, 0, 180)));
+    //if(yvol < 0) rotate(radians(-map(this.distance(), 0, this.jumpHeight, 180, 0)));
         fill(r, g, b);
     rect(-(wid/2), -(heig/2), wid, heig);
     popMatrix();
-    
-    x+=xvol;
-    y+=yvol;
+
     rotation++;
     if(rotation== 360) rotation=0;
   }
   
  
   
-  
+  void jump() {
+    if(!jumping) {
+      jumping = true;
+      jumpPos = -10;
+    }
+  }
   
   void randomColor() {
         this.r = (int) random(0, 255);

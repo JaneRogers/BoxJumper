@@ -1,7 +1,5 @@
 int minDistance = 350;
 int maxDistance = 600;
-int jumpVelocity = 40;
-double gravity = 2.5;
 
 String[] deathNotes = { "You were killed by that spike!!!", "A spike went up your bum!!!", "You were brutally dissected!!!", "Next time bring a jetpack!!!" };
 String deathNote = null;
@@ -82,7 +80,7 @@ void draw() {
 
 void keyPressed() {
   if (key == ' ') {
-    if (player.yvol == 0) player.yvol-=jumpVelocity;
+    //if (player.yvol == 0) player.yvol-=jumpVelocity;
   }
   if (key == 'b') background(72, 224, 38);
   if (key == 'p') active = !active;
@@ -118,12 +116,12 @@ boolean processTriangles() {
   for (int i=0; i<triangle.length; i++) {
     if (!triangle[i].passedScreen()) onScreen = true;
     if (player.collidedWith(triangle[i])) {
-      active = false;
-      killed = true;
-      return true;
+      //active = false;
+      //killed = true;
+      //return true;
     }
-    println( (player.x+player.wid)+ ">=" + ((triangle[i].x-scroll)-500) + " && " + player.yvol + "==0 && " + player.x + "<=" + ((triangle[i].x-scroll)+triangle[i].size));
-    if(player.x+player.wid >= (triangle[i].x-scroll)-50 && player.distance() == 0 && player.x <= (triangle[i].x-scroll)+triangle[i].size) player.yvol-=jumpVelocity;
+    //println( (player.x+player.wid)+ ">=" + ((triangle[i].x-scroll)-500) + " && " + player.yvol + "==0 && " + player.x + "<=" + ((triangle[i].x-scroll)+triangle[i].size));
+    if(player.x+player.wid >= (triangle[i].x-scroll)-50 && player.distance() == 0 && player.x <= (triangle[i].x-scroll)+triangle[i].size) player.jump();
     triangle[i].draw();
   }
   if (!onScreen) resetTriangles();
