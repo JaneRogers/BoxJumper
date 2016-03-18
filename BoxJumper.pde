@@ -1,7 +1,7 @@
 int minDistance = 350;
 int maxDistance = 600;
 
-String[] deathNotes = { "You were killed by that spike!!!", "A spike went up your bum!!!", "You were brutally dissected!!!", "Next time bring a jetpack!!!" };
+String[] deathNotes = { "You were killed by that spike!!!", "A spike went up your bum!!!", "You were brutally dissected!!!", "Next time bring a jetpack!!!", "You just got wrecked!!!", "Get shrecked!!!" };
 String deathNote = null;
 String finalScore = "Score: ";
 int size=100;
@@ -30,6 +30,7 @@ void setup() {
     triangle[i] = new DeathTriangle(xpos, height-100);
     lastX = xpos;
   }
+  //frameRate(5);
 }
 
 void draw() {
@@ -38,7 +39,7 @@ void draw() {
   fill(255);
   textSize(60);
   text(score, 60, 60);
-  if (active) scroll+=map(score, 0, 10, 10, 15);
+  if (active) scroll+=min(map(score, 0, 10, 10, 20), 20);
   if (!killed) {
     if (processTriangles()) {
       background(255, 0, 0);
@@ -81,6 +82,7 @@ void draw() {
 void keyPressed() {
   if (key == ' ') {
     //if (player.yvol == 0) player.yvol-=jumpVelocity;
+    player.jump();
   }
   if (key == 'b') background(72, 224, 38);
   if (key == 'p') active = !active;
@@ -90,6 +92,7 @@ void keyPressed() {
 }
 
 void reset() {
+  score =1;
   resetTriangles();
   active = true;
     killed = false;
@@ -116,12 +119,12 @@ boolean processTriangles() {
   for (int i=0; i<triangle.length; i++) {
     if (!triangle[i].passedScreen()) onScreen = true;
     if (player.collidedWith(triangle[i])) {
-      //active = false;
-      //killed = true;
-      //return true;
+      active = false;
+      killed = true;
+      return true;
     }
     //println( (player.x+player.wid)+ ">=" + ((triangle[i].x-scroll)-500) + " && " + player.yvol + "==0 && " + player.x + "<=" + ((triangle[i].x-scroll)+triangle[i].size));
-    if(player.x+player.wid >= (triangle[i].x-scroll)-50 && player.distance() == 0 && player.x <= (triangle[i].x-scroll)+triangle[i].size) player.jump();
+    //if(player.x+player.wid >= (triangle[i].x-scroll)-75 && player.distance() == 0 && player.x <= (triangle[i].x-scroll)+triangle[i].size) player.jump();
     triangle[i].draw();
   }
   if (!onScreen) resetTriangles();

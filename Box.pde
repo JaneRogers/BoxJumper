@@ -10,6 +10,10 @@ class Box {
   int heig=30;
   int rotation = 0;
   int jumpHeight=340;
+  int jumpRangeStart=-15;
+  int jumpRangeEnd=15;
+  int jumpY;
+  float jumpScale = 0.5;
   boolean jumping=false;
   float jumpPos=-10;
   Box(int _x, int _y, int _wid, int _heig, int _xvol, int _yvol) { // Constructor
@@ -19,16 +23,17 @@ class Box {
     this.yvol = _yvol;
     this.wid = _wid;
     this.heig = _heig;
+   jumpY = (int) pow(jumpRangeStart*jumpScale, 2);
   randomColor();
   }
 
   void draw() {    
     int ty=this.y;
     if(jumping) {
-      jumpPos+=1;
+      jumpPos+=min(map(score, 0, 20, 1, 3), 3);
      
-      ty = (height-this.heig)-((int) map(pow((jumpPos*0.4), 2), 25, 0, 0, jumpHeight));
-      if(jumpPos == 10) jumping=false;
+      ty = (height-this.heig)-((int) map(pow((jumpPos*jumpScale), 2), jumpY, 0, 0, jumpHeight));
+      if(jumpPos >= jumpRangeEnd) jumping=false;
     }
       
     
@@ -49,7 +54,7 @@ class Box {
   void jump() {
     if(!jumping) {
       jumping = true;
-      jumpPos = -10;
+      jumpPos = jumpRangeStart;
     }
   }
   
@@ -61,7 +66,8 @@ class Box {
   
   boolean collidedWith(DeathTriangle triangle) {
     if(scroll+this.x+this.wid >= triangle.x) {
-      if(this.y+this.heig >= triangle.y) {
+      int ty = (height-this.heig)-((int) map(pow((jumpPos*jumpScale), 2), jumpY, 0, 0, jumpHeight));
+      if(ty+this.heig >= triangle.y) {
         if(scroll+this.x <= triangle.x+triangle.size) {
         return true;
         } else {
