@@ -15,7 +15,7 @@ class Box {
   int jumpY;
   float jumpScale = 0.5;
   boolean jumping=false;
-  float jumpPos=-10;
+  float jumpPos=0;
   Box(int _x, int _y, int _wid, int _heig, int _xvol, int _yvol) { // Constructor
     this.x = _x;
     this.y = _y;
@@ -33,14 +33,17 @@ class Box {
       jumpPos+=min(map(score, 0, 20, 1, 3), 3);
      
       ty = (height-this.heig)-((int) map(pow((jumpPos*jumpScale), 2), jumpY, 0, 0, jumpHeight));
-      if(jumpPos >= jumpRangeEnd) jumping=false;
+      if(jumpPos >= jumpRangeEnd) {
+        jumping=false;
+        jumpPos = 0;
+      }
     }
       
     
     pushMatrix();
     translate(x+(wid/2), ty+(heig/2));
-    //if(yvol > 0) rotate(radians(-map(this.distance(), 0, this.jumpHeight, 0, 180)));
-    //if(yvol < 0) rotate(radians(-map(this.distance(), 0, this.jumpHeight, 180, 0)));
+    if(jumpPos > 0) rotate(radians(-map(this.distance(), 0, this.jumpHeight, 0, 180)));
+    if(jumpPos < 0) rotate(radians(-map(this.distance(), 0, this.jumpHeight, 180, 0)));
         fill(r, g, b);
     rect(-(wid/2), -(heig/2), wid, heig);
     popMatrix();
@@ -66,10 +69,19 @@ class Box {
   
   boolean collidedWith(DeathTriangle triangle) {
     if(scroll+this.x+this.wid >= triangle.x) {
-      int ty = (height-this.heig)-((int) map(pow((jumpPos*jumpScale), 2), jumpY, 0, 0, jumpHeight));
-      if(ty+this.heig >= triangle.y) {
+      int ty = this.y;
+      if(jumping) ty = (height-this.heig)-((int) map(pow((jumpPos*jumpScale), 2), jumpY, 0, 0, jumpHeight));
+      int relativeX = (scroll+this.x+this.wid)-triangle.x;
+      if(scroll+this.x >= triangle.x+(triangle.size/2)) relativeX = (triangle.size-((scroll+this.x)-(triangle.x+(triangle.size/2))));
+      println(ty + "+" + this.heig+ ">=" + height + "-" +relativeX);
+      println((    ty+   this.heig) + ">="+ (height-relativeX));
+      
+      
+
         if(scroll+this.x <= triangle.x+triangle.size) {
+          if(ty+this.heig >= (height-relativeX)) {
         return true;
+        
         } else {
            if(!triangle.cleared) {
              score++;
@@ -77,11 +89,15 @@ class Box {
            }
         }
       }
-    }
+      }
+    
     return false;
   }
   
   int distance() {
-    return height-(this.y+this.heig);
+    int ty = this.y;
+      if(jumping) ty = (height-this.heig)-((int) map(pow((jumpPos*jumpScale), 2), jumpY, 0, 0, jumpHeight));
+    //println(height-(ty+this.heig));
+    return (height-(ty+this.heig));
   }
 }

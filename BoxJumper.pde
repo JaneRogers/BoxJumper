@@ -1,7 +1,7 @@
 int minDistance = 350;
 int maxDistance = 600;
 
-String[] deathNotes = { "You were killed by that spike!!!", "A spike went up your bum!!!", "You were brutally dissected!!!", "Next time bring a jetpack!!!", "You just got wrecked!!!", "Get shrecked!!!" };
+String[] deathNotes = { "You were killed by that spike!!!", "A spike went up your bum!!!", "You were brutally dissected!!!", "Next time bring a jetpack!!!", "You just got wrecked son!!!", "Get shrecked!!!", "You suck!!!", "Get wrecked bro!!!", "That was your fault!!!", "That stupid crapy nonsensable triangle!!!" };
 String deathNote = null;
 String finalScore = "Score: ";
 int size=100;
@@ -13,7 +13,7 @@ boolean killed = false;
 boolean messagePlayed = false;
 
 double friction = .0;
-int scroll = 0;
+int scroll = 500;
 int score = 0;
 int deathOpacity = 0;
 
@@ -30,7 +30,7 @@ void setup() {
     triangle[i] = new DeathTriangle(xpos, height-100);
     lastX = xpos;
   }
-  //frameRate(5);
+  // frameRate(20);
 }
 
 void draw() {
