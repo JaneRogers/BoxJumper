@@ -10,8 +10,8 @@ class Box {
   int heig=30;
   int rotation = 0;
   int jumpHeight=340;
-  int jumpRangeStart=-15;
-  int jumpRangeEnd=15;
+  int jumpRangeStart=-18;
+  int jumpRangeEnd=18;
   int jumpY;
   float jumpScale = 0.5;
   boolean jumping=false;
